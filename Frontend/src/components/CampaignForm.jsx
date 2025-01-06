@@ -20,7 +20,7 @@ const CampaignForm = ({ onRefresh }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://backendemail-o2vv.onrender.com/api/campaigns', {
+      const response = await fetch('https://email-campaigns-x70d.onrender.com/api/campaigns', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
