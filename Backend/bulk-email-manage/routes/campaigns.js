@@ -4,6 +4,8 @@ const authMiddleware = require("../middleware/authMiddleware");
 const sendEmail = require("../utils/sendEmail");
 const validateCampaign = require("../middleware/validateCampaign");
 const Campaign = require("../models/Campaign");
+const { getPerformanceData } = require("../controllers/campaignController");
+
 
 const router = express.Router();
 
@@ -25,6 +27,18 @@ router.get("/test-email", async (req, res) => {
   router.post("/", validateCampaign, createCampaign);
 
   console.log("Campaign model:", Campaign);
+
+  router.get("/performance/:campaignId", getPerformanceData);
+
+  router.get('/campaigns', (req, res) => {
+    const campaigns = [
+      { id: 1, name: 'New Year Sale', status: 'Completed', emailsSent: 500 },
+      { id: 2, name: 'Black Friday Offer', status: 'In Progress', emailsSent: 300 },
+      { id: 3, name: 'Holiday Campaign', status: 'Failed', emailsSent: 200 },
+    ];
+    res.json(campaigns);
+  });
+
 
 
 module.exports = router;

@@ -1,30 +1,35 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const User = require("../models/User"); // Import the User model
 const router = express.Router();
 
-// Dummy admin credentials (replace this with database lookup if needed)
-const admin = {
-    email: "admin@example.com",
-    password: "$2a$10$ZyxR5Qe.pF/NU.yZBl/ruOShC0e2nWXHhNf5Cwbw4IqSMyRAkjVCW" // bcrypt hash of 'password123'
-};
-
-// Signup Controller
 const signup = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        console.log(req.body);  // Add this line to check if the data is received correctly
+
+        const { username, email, password } = req.body;
 
         // Validate input
-        if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required." });
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: "Username, email, and password are required." });
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists with this email." });
+        }
 
-        // Save user to the database (mock example, replace with DB logic)
-        admin.email = email;
-        admin.password = hashedPassword;
+        // Create new user
+        const newUser = new User({
+            username,
+            email,
+            password,
+        });
+
+        // Save user to the database
+        await newUser.save();
 
         res.status(201).json({ message: "Signup successful. You can now log in." });
     } catch (error) {
@@ -36,19 +41,20 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body;
 
-    // Check if email matches
-    if (email !== admin.email) {
+    // Check if email exists in the database
+    const user = await User.findOne({ email });
+    if (!user) {
         return res.status(400).json({ message: "Invalid email or password." });
     }
 
     // Check if password matches
-    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
         return res.status(400).json({ message: "Invalid email or password." });
     }
 
     // Generate JWT token
-    const token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
     res.json({ token });
 };
 

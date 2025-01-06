@@ -51,6 +51,28 @@ const sendEmail = require("../utils/sendEmail");
     }
   };
   
+
+  const getPerformanceData = async (req, res) => {
+    const { campaignId } = req.params;
+    try {
+      const campaign = await Campaign.findById(campaignId);
+      if (!campaign) return res.status(404).json({ message: "Campaign not found" });
   
-  module.exports = { createCampaign, getCampaigns, updateCampaign, deleteCampaign };
+      const performance = {
+        emailsSent: campaign.recipients.length,
+        delivered: Math.floor(campaign.recipients.length * 0.95),
+        openRate: Math.floor(campaign.recipients.length * 0.7),
+        clickRate: Math.floor(campaign.recipients.length * 0.3),
+      };
+  
+      res.status(200).json(performance);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error fetching performance data" });
+    }
+  };
+  
+  
+  
+  module.exports = { createCampaign, getCampaigns, updateCampaign, deleteCampaign, getPerformanceData };
   
