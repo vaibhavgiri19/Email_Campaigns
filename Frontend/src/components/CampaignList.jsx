@@ -22,6 +22,8 @@ const CampaignList = ({ refresh }) => {
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/campaigns';
       await axios.post(`${API_URL}/send/${id}`);
       alert('Campaign emails sent successfully!');
+      console.log('Fetched campaigns:', data); 
+
     } catch (error) {
       console.error('Error sending campaign:', error.message);
     }
