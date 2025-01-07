@@ -7,7 +7,8 @@ const CampaignList = ({ refresh }) => {
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/campaigns';
+        // Hardcoding the API URL
+        const API_URL = 'https://email-campaigns-0non.onrender.com/api/campaigns';
         const { data } = await axios.get(API_URL);
         setCampaigns(data);
       } catch (error) {
@@ -19,7 +20,8 @@ const CampaignList = ({ refresh }) => {
 
   const sendCampaign = async (id) => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/campaigns';
+      // Hardcoding the API URL for sending campaign
+      const API_URL = 'https://email-campaigns-0non.onrender.com/api/campaigns';
       await axios.post(`${API_URL}/send/${id}`);
       alert('Campaign emails sent successfully!');
     } catch (error) {
