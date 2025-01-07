@@ -11,13 +11,13 @@ connectDB();
 
 // CORS Options
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow frontend on port 3000
+  origin: 'https://email-campaigns-git-main-vaibhav-giris-projects.vercel.app', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Allow cookies if needed
+  credentials: true, 
 };
-app.use(cors(corsOptions)); // Enable CORS with options
 
+app.use(cors(corsOptions));
 // Middleware
 app.use(cors(corsOptions)); // Enable CORS with options
 app.use(express.json());
